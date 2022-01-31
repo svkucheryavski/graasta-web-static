@@ -17,7 +17,7 @@
       <div class="toolbar">
          <span title="Run demo" on:click={() => dispatch("showdemo", id)}>Try</span>
          <a title="Download" href="/apps/{id}.zip">Download</a>
-         {#if video}<a title="Link to YouTube video" href="{video}">Video-lesson</a>{/if}
+         <!-- {#if video}<a title="Link to YouTube video" href="{video}">Video-lesson</a>{/if} -->
       </div>
    </div>
 </div>
