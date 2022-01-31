@@ -69,6 +69,7 @@
 
    .modal-content  {
       margin: 0 auto;
+      padding: 10px;
       background: white;
       height: max-content;
       overflow: auto;

@@ -10,9 +10,11 @@
    function showDemo(e) {
       appID = e.detail;
       demoOn = true;
+      document.querySelector("body").style.overflow = "hidden";
    };
 
    function closeDemo(e) {
+      document.querySelector("body").style.overflow = "auto";
       demoOn = false
       appID = undefined;
    };
