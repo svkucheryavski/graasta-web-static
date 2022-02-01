@@ -15,10 +15,13 @@
          <h2>{@html title}</h2>
       </header>
       <section class="modal-content">
-         <div class="app-container">
+         <div class="content-container">
             <AppFrame {id} />
          </div>
       </section>
+      <footer class="modal-footer">
+
+      </footer>
    </article>
 </div>
 
@@ -46,25 +49,32 @@
       width: 100%;
 
       position: relative;
-      height: max-content;
+      height: min(700px, 100%);
       overflow: auto;
 
       display: flex;
       flex-direction: column;
    }
 
+   .modal-footer,
    .modal-header {
-      background: rgba(0.2, 0, 0, 0.5);
+      background: #303030;
    }
 
+   .modal-footer {
+      text-align: center;
+      height: 1.75em;
+      font-size: 1.25em;
+      font-weight: 500;
+      padding: 0.25em;
+   }
 
    .modal-header > h2 {
       text-align: center;
-      font-size: 1.5em;
+      font-size: 1.25em;
       font-weight: 500;
-      padding: 0.5em;
-      color: #808080;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 0.25em;
+      color: #e0e0e0;
    }
 
    .modal-content  {
@@ -77,11 +87,14 @@
       height: 100%;
    }
 
-   .modal-content > .app-container {
-      max-width: 1200px;
+   .modal-content > .content-container {
+
       min-width: 800px;
-      width: 100%;
-      height: auto;
+      min-height: 450px;
+
+      width: auto;
+      height: 100%;
+
       aspect-ratio: 16/9;
       margin: 0 auto;
       padding: 0;
