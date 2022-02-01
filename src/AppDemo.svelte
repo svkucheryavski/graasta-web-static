@@ -9,8 +9,8 @@
    let title = id;
 </script>
 
-<div in:fade out:fade class="backstage" on:click={() => dispatch("close")}>
-   <article in:fly out:fly class="modal" on:click={null}>
+<div transition:fade class="backstage" on:click={() => dispatch("close")}>
+   <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal" on:click={null}>
       <header class="modal-header">
          <h2>{@html title}</h2>
       </header>
@@ -69,12 +69,30 @@
       padding: 0.25em;
    }
 
+
    .modal-header > h2 {
       text-align: center;
       font-size: 1.25em;
       font-weight: 500;
       padding: 0.25em;
       color: #e0e0e0;
+   }
+
+   .modal-header > h2::after {
+      content: '×';
+      display: inline-block;
+      margin-left: 10px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border-radius: 50%;
+      background: #606060;
+      color: #e0e0e0;
+   }
+
+   .modal-header > h2:hover::after{
+      background: #ff9900;
+      color: #301000;
    }
 
    .modal-content  {
