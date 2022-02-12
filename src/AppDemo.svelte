@@ -10,30 +10,11 @@
    export let video;
    export let help;
 
-
    // let title = id;
    let selected, sApp, sVideo, sHelp;
 
    onMount(() => {
       selected = sApp;
-      // check that url to app demo exists
-      const appUrl = "/apps/" + id + "/index.html";
-      const  request = new XMLHttpRequest();
-
-      request.open("GET", appUrl, true);
-      request.onreadystatechange = function(){
-         if (request.readyState === 4){
-            if (request.status === 404) {
-               appSrc = "";
-               loaded = false;
-            } else {
-               console.log(request.response)
-               appSrc = appUrl;
-               loaded = true;
-            }
-         }
-      };
-      request.send();
    });
 
 </script>
@@ -41,7 +22,7 @@
 <div transition:fade class="backstage">
    <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
       <header class="modal-header">
-         <h2 on:click|stopPropagation={() => dispatch("close")}>{@html title}</h2>
+         <h2 title="click to close" on:click|stopPropagation={() => dispatch("close")}>{@html title}</h2>
       </header>
       <section class="modal-content">
          <div class="content-container" class:hidden={selected!=sApp} bind:this={sApp}>
@@ -202,7 +183,7 @@
    }
 
    .helptext :global(h2) {
-      padding: 1em 0 0.5em 0;
+      padding: 1.25em 0 1em 0;
       font-size: 1.2em;
    }
 
