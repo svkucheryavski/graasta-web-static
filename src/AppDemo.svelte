@@ -17,7 +17,12 @@
       selected = sApp;
    });
 
+   function handleKeydown(event) {
+      if (event.key == "Escape") dispatch("close");
+   }
 </script>
+
+<svelte:window on:keydown={handleKeydown}/>
 
 <div transition:fade class="backstage">
    <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
@@ -173,7 +178,7 @@
       background: #fefefe;
    }
 
-   /* help text and button */
+   /* help text  */
 
    .helptext {
       padding: 1em;
