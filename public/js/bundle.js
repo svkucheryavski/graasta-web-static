@@ -125,6 +125,13 @@ var app = (function () {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
     }
+    function stop_propagation(fn) {
+        return function (event) {
+            event.stopPropagation();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -465,12 +472,6 @@ var app = (function () {
         };
     }
 
-    const globals = (typeof window !== 'undefined'
-        ? window
-        : typeof globalThis !== 'undefined'
-            ? globalThis
-            : global);
-
     function get_spread_update(levels, updates) {
         const update = {};
         const to_null_out = {};
@@ -758,24 +759,24 @@ var app = (function () {
     			a = element("a");
     			t8 = text("Download");
     			attr_dev(span0, "class", "app-id svelte-flsgey");
-    			add_location(span0, file$4, 12, 3, 237);
+    			add_location(span0, file$4, 13, 3, 269);
     			attr_dev(h3, "class", "svelte-flsgey");
-    			add_location(h3, file$4, 14, 6, 302);
+    			add_location(h3, file$4, 15, 6, 334);
     			attr_dev(p, "class", "svelte-flsgey");
-    			add_location(p, file$4, 15, 6, 325);
+    			add_location(p, file$4, 16, 6, 357);
     			attr_dev(span1, "title", "Run demo");
     			attr_dev(span1, "class", "svelte-flsgey");
-    			add_location(span1, file$4, 17, 9, 376);
+    			add_location(span1, file$4, 18, 9, 408);
     			attr_dev(a, "title", "Download");
     			attr_dev(a, "href", a_href_value = "/apps/" + /*id*/ ctx[0] + ".zip");
     			attr_dev(a, "class", "svelte-flsgey");
-    			add_location(a, file$4, 18, 9, 461);
+    			add_location(a, file$4, 19, 9, 515);
     			attr_dev(div0, "class", "toolbar svelte-flsgey");
-    			add_location(div0, file$4, 16, 6, 345);
+    			add_location(div0, file$4, 17, 6, 377);
     			attr_dev(div1, "class", "app-info svelte-flsgey");
-    			add_location(div1, file$4, 13, 3, 273);
+    			add_location(div1, file$4, 14, 3, 305);
     			attr_dev(div2, "class", "app-details svelte-flsgey");
-    			add_location(div2, file$4, 11, 0, 208);
+    			add_location(div2, file$4, 12, 0, 240);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -799,7 +800,7 @@ var app = (function () {
     			append_dev(a, t8);
 
     			if (!mounted) {
-    				dispose = listen_dev(span1, "click", /*click_handler*/ ctx[5], false, false, false);
+    				dispose = listen_dev(span1, "click", /*click_handler*/ ctx[6], false, false, false);
     				mounted = true;
     			}
     		},
@@ -838,20 +839,22 @@ var app = (function () {
     	let { id } = $$props;
     	let { title } = $$props;
     	let { info } = $$props;
+    	let { help = undefined } = $$props;
     	let { video = undefined } = $$props;
     	const dispatch = createEventDispatcher();
-    	const writable_props = ['id', 'title', 'info', 'video'];
+    	const writable_props = ['id', 'title', 'info', 'help', 'video'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AppDetails> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = () => dispatch("showdemo", id);
+    	const click_handler = () => dispatch("showdemo", { id, title, video, help });
 
     	$$self.$$set = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('info' in $$props) $$invalidate(2, info = $$props.info);
+    		if ('help' in $$props) $$invalidate(3, help = $$props.help);
     		if ('video' in $$props) $$invalidate(4, video = $$props.video);
     	};
 
@@ -860,6 +863,7 @@ var app = (function () {
     		id,
     		title,
     		info,
+    		help,
     		video,
     		dispatch
     	});
@@ -868,6 +872,7 @@ var app = (function () {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('info' in $$props) $$invalidate(2, info = $$props.info);
+    		if ('help' in $$props) $$invalidate(3, help = $$props.help);
     		if ('video' in $$props) $$invalidate(4, video = $$props.video);
     	};
 
@@ -875,13 +880,20 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [id, title, info, dispatch, video, click_handler];
+    	return [id, title, info, help, video, dispatch, click_handler];
     }
 
     class AppDetails extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { id: 0, title: 1, info: 2, video: 4 });
+
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    			id: 0,
+    			title: 1,
+    			info: 2,
+    			help: 3,
+    			video: 4
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -927,6 +939,14 @@ var app = (function () {
     	}
 
     	set info(value) {
+    		throw new Error("<AppDetails>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get help() {
+    		throw new Error("<AppDetails>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set help(value) {
     		throw new Error("<AppDetails>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -1306,7 +1326,6 @@ var app = (function () {
 
     /* src/AppFrame.svelte generated by Svelte v3.42.4 */
 
-    const { console: console_1 } = globals;
     const file$2 = "src/AppFrame.svelte";
 
     function create_fragment$2(ctx) {
@@ -1319,11 +1338,11 @@ var app = (function () {
     			iframe = element("iframe");
     			t = text("Loading");
     			attr_dev(iframe, "title", /*id*/ ctx[0]);
-    			if (!src_url_equal(iframe.src, iframe_src_value = /*appSrc*/ ctx[1])) attr_dev(iframe, "src", iframe_src_value);
+    			if (!src_url_equal(iframe.src, iframe_src_value = "/apps/" + /*id*/ ctx[0] + "/index.html")) attr_dev(iframe, "src", iframe_src_value);
     			attr_dev(iframe, "width", "100%");
     			attr_dev(iframe, "height", "100%");
     			attr_dev(iframe, "class", "svelte-1tc7xux");
-    			add_location(iframe, file$2, 29, 0, 686);
+    			add_location(iframe, file$2, 4, 0, 38);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1337,7 +1356,7 @@ var app = (function () {
     				attr_dev(iframe, "title", /*id*/ ctx[0]);
     			}
 
-    			if (dirty & /*appSrc*/ 2 && !src_url_equal(iframe.src, iframe_src_value = /*appSrc*/ ctx[1])) {
+    			if (dirty & /*id*/ 1 && !src_url_equal(iframe.src, iframe_src_value = "/apps/" + /*id*/ ctx[0] + "/index.html")) {
     				attr_dev(iframe, "src", iframe_src_value);
     			}
     		},
@@ -1363,56 +1382,27 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('AppFrame', slots, []);
     	let { id } = $$props;
-    	let appSrc = "";
-    	let loaded = false;
-
-    	onMount(() => {
-    		// check that url to app demo exists
-    		const appUrl = "/apps/" + id + "/index.html";
-
-    		const request = new XMLHttpRequest();
-    		request.open("GET", appUrl, true);
-
-    		request.onreadystatechange = function () {
-    			if (request.readyState === 4) {
-    				console.log(request);
-
-    				if (request.status === 404) {
-    					$$invalidate(1, appSrc = "");
-    					loaded = false;
-    				} else {
-    					$$invalidate(1, appSrc = appUrl);
-    					loaded = true;
-    				}
-    			}
-    		};
-
-    		request.send();
-    	});
-
     	const writable_props = ['id'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<AppFrame> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AppFrame> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
     	};
 
-    	$$self.$capture_state = () => ({ onMount, id, appSrc, loaded });
+    	$$self.$capture_state = () => ({ id });
 
     	$$self.$inject_state = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
-    		if ('appSrc' in $$props) $$invalidate(1, appSrc = $$props.appSrc);
-    		if ('loaded' in $$props) loaded = $$props.loaded;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [id, appSrc];
+    	return [id];
     }
 
     class AppFrame extends SvelteComponentDev {
@@ -1431,7 +1421,7 @@ var app = (function () {
     		const props = options.props || {};
 
     		if (/*id*/ ctx[0] === undefined && !('id' in props)) {
-    			console_1.warn("<AppFrame> was created without expected prop 'id'");
+    			console.warn("<AppFrame> was created without expected prop 'id'");
     		}
     	}
 
@@ -1447,8 +1437,155 @@ var app = (function () {
     /* src/AppDemo.svelte generated by Svelte v3.42.4 */
     const file$1 = "src/AppDemo.svelte";
 
+    // (31:9) {#if video}
+    function create_if_block_2(ctx) {
+    	let div;
+    	let iframe;
+    	let iframe_src_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			iframe = element("iframe");
+    			attr_dev(iframe, "width", "100%");
+    			attr_dev(iframe, "height", "100%");
+    			if (!src_url_equal(iframe.src, iframe_src_value = /*video*/ ctx[2])) attr_dev(iframe, "src", iframe_src_value);
+    			attr_dev(iframe, "title", "YouTube video player");
+    			attr_dev(iframe, "frameborder", "0");
+    			attr_dev(iframe, "allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+    			iframe.allowFullscreen = true;
+    			add_location(iframe, file$1, 32, 12, 990);
+    			attr_dev(div, "class", "content-container svelte-rmm33d");
+    			toggle_class(div, "hidden", /*selected*/ ctx[4] != /*sVideo*/ ctx[6]);
+    			add_location(div, file$1, 31, 9, 895);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, iframe);
+    			/*div_binding*/ ctx[11](div);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*video*/ 4 && !src_url_equal(iframe.src, iframe_src_value = /*video*/ ctx[2])) {
+    				attr_dev(iframe, "src", iframe_src_value);
+    			}
+
+    			if (dirty & /*selected, sVideo*/ 80) {
+    				toggle_class(div, "hidden", /*selected*/ ctx[4] != /*sVideo*/ ctx[6]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*div_binding*/ ctx[11](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(31:9) {#if video}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (43:12) {#if video}
+    function create_if_block_1(ctx) {
+    	let a;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			a = element("a");
+    			a.textContent = "Video";
+    			attr_dev(a, "href", "#2");
+    			attr_dev(a, "role", "tab");
+    			attr_dev(a, "class", "svelte-rmm33d");
+    			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sVideo*/ ctx[6]);
+    			add_location(a, file$1, 43, 12, 1636);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, a, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(a, "click", stop_propagation(/*click_handler_2*/ ctx[14]), false, false, true);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*selected, sVideo*/ 80) {
+    				toggle_class(a, "selected", /*selected*/ ctx[4] == /*sVideo*/ ctx[6]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(a);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(43:12) {#if video}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (46:12) {#if help}
+    function create_if_block$1(ctx) {
+    	let a;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			a = element("a");
+    			a.textContent = "Info";
+    			attr_dev(a, "href", "#3");
+    			attr_dev(a, "role", "tab");
+    			attr_dev(a, "class", "svelte-rmm33d");
+    			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sHelp*/ ctx[7]);
+    			add_location(a, file$1, 46, 12, 1806);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, a, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(a, "click", stop_propagation(/*click_handler_3*/ ctx[15]), false, false, true);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*selected, sHelp*/ 144) {
+    				toggle_class(a, "selected", /*selected*/ ctx[4] == /*sHelp*/ ctx[7]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(a);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(46:12) {#if help}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$1(ctx) {
-    	let div1;
+    	let div2;
     	let article;
     	let header;
     	let h2;
@@ -1457,9 +1594,16 @@ var app = (function () {
     	let div0;
     	let appframe;
     	let t1;
+    	let t2;
+    	let div1;
+    	let t3;
     	let footer;
+    	let nav;
+    	let a;
+    	let t5;
+    	let t6;
     	let article_transition;
-    	let div1_transition;
+    	let div2_transition;
     	let current;
     	let mounted;
     	let dispose;
@@ -1469,9 +1613,13 @@ var app = (function () {
     			$$inline: true
     		});
 
+    	let if_block0 = /*video*/ ctx[2] && create_if_block_2(ctx);
+    	let if_block1 = /*video*/ ctx[2] && create_if_block_1(ctx);
+    	let if_block2 = /*help*/ ctx[3] && create_if_block$1(ctx);
+
     	const block = {
     		c: function create() {
-    			div1 = element("div");
+    			div2 = element("div");
     			article = element("article");
     			header = element("header");
     			h2 = element("h2");
@@ -1480,52 +1628,141 @@ var app = (function () {
     			div0 = element("div");
     			create_component(appframe.$$.fragment);
     			t1 = space();
+    			if (if_block0) if_block0.c();
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = space();
     			footer = element("footer");
-    			attr_dev(h2, "class", "svelte-14ht2hm");
-    			add_location(h2, file$1, 14, 9, 467);
-    			attr_dev(header, "class", "modal-header svelte-14ht2hm");
-    			add_location(header, file$1, 13, 6, 428);
-    			attr_dev(div0, "class", "content-container svelte-14ht2hm");
-    			add_location(div0, file$1, 17, 9, 553);
-    			attr_dev(section, "class", "modal-content svelte-14ht2hm");
-    			add_location(section, file$1, 16, 6, 512);
-    			attr_dev(footer, "class", "modal-footer svelte-14ht2hm");
-    			add_location(footer, file$1, 21, 6, 654);
-    			attr_dev(article, "class", "modal svelte-14ht2hm");
-    			add_location(article, file$1, 12, 3, 335);
-    			attr_dev(div1, "class", "backstage svelte-14ht2hm");
-    			add_location(div1, file$1, 11, 0, 257);
+    			nav = element("nav");
+    			a = element("a");
+    			a.textContent = "App";
+    			t5 = space();
+    			if (if_block1) if_block1.c();
+    			t6 = space();
+    			if (if_block2) if_block2.c();
+    			attr_dev(h2, "title", "click to close");
+    			attr_dev(h2, "class", "svelte-rmm33d");
+    			add_location(h2, file$1, 24, 9, 580);
+    			attr_dev(header, "class", "modal-header svelte-rmm33d");
+    			add_location(header, file$1, 23, 6, 541);
+    			attr_dev(div0, "class", "content-container svelte-rmm33d");
+    			toggle_class(div0, "hidden", /*selected*/ ctx[4] != /*sApp*/ ctx[5]);
+    			add_location(div0, file$1, 27, 9, 740);
+    			attr_dev(div1, "class", "content-container helptext svelte-rmm33d");
+    			toggle_class(div1, "hidden", /*selected*/ ctx[4] != /*sHelp*/ ctx[7]);
+    			add_location(div1, file$1, 35, 9, 1247);
+    			attr_dev(section, "class", "modal-content svelte-rmm33d");
+    			add_location(section, file$1, 26, 6, 699);
+    			attr_dev(a, "href", "#1");
+    			attr_dev(a, "role", "tab");
+    			attr_dev(a, "class", "svelte-rmm33d");
+    			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sApp*/ ctx[5]);
+    			add_location(a, file$1, 41, 12, 1489);
+    			attr_dev(nav, "class", "tablist svelte-rmm33d");
+    			attr_dev(nav, "role", "tablist");
+    			add_location(nav, file$1, 40, 9, 1440);
+    			attr_dev(footer, "class", "modal-footer svelte-rmm33d");
+    			add_location(footer, file$1, 39, 6, 1401);
+    			attr_dev(article, "class", "modal svelte-rmm33d");
+    			add_location(article, file$1, 22, 3, 464);
+    			attr_dev(div2, "class", "backstage svelte-rmm33d");
+    			add_location(div2, file$1, 21, 0, 421);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, article);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, article);
     			append_dev(article, header);
     			append_dev(header, h2);
-    			h2.innerHTML = /*title*/ ctx[2];
+    			h2.innerHTML = /*title*/ ctx[1];
     			append_dev(article, t0);
     			append_dev(article, section);
     			append_dev(section, div0);
     			mount_component(appframe, div0, null);
-    			append_dev(article, t1);
+    			/*div0_binding*/ ctx[10](div0);
+    			append_dev(section, t1);
+    			if (if_block0) if_block0.m(section, null);
+    			append_dev(section, t2);
+    			append_dev(section, div1);
+    			div1.innerHTML = /*help*/ ctx[3];
+    			/*div1_binding*/ ctx[12](div1);
+    			append_dev(article, t3);
     			append_dev(article, footer);
+    			append_dev(footer, nav);
+    			append_dev(nav, a);
+    			append_dev(nav, t5);
+    			if (if_block1) if_block1.m(nav, null);
+    			append_dev(nav, t6);
+    			if (if_block2) if_block2.m(nav, null);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(article, "click", null, false, false, false),
-    					listen_dev(div1, "click", /*click_handler*/ ctx[3], false, false, false)
+    					listen_dev(h2, "click", stop_propagation(/*click_handler*/ ctx[9]), false, false, true),
+    					listen_dev(a, "click", stop_propagation(/*click_handler_1*/ ctx[13]), false, false, true)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			const appframe_changes = {};
+    			if (!current || dirty & /*title*/ 2) h2.innerHTML = /*title*/ ctx[1];			const appframe_changes = {};
     			if (dirty & /*id*/ 1) appframe_changes.id = /*id*/ ctx[0];
     			appframe.$set(appframe_changes);
+
+    			if (dirty & /*selected, sApp*/ 48) {
+    				toggle_class(div0, "hidden", /*selected*/ ctx[4] != /*sApp*/ ctx[5]);
+    			}
+
+    			if (/*video*/ ctx[2]) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_2(ctx);
+    					if_block0.c();
+    					if_block0.m(section, t2);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (!current || dirty & /*help*/ 8) div1.innerHTML = /*help*/ ctx[3];
+    			if (dirty & /*selected, sHelp*/ 144) {
+    				toggle_class(div1, "hidden", /*selected*/ ctx[4] != /*sHelp*/ ctx[7]);
+    			}
+
+    			if (dirty & /*selected, sApp*/ 48) {
+    				toggle_class(a, "selected", /*selected*/ ctx[4] == /*sApp*/ ctx[5]);
+    			}
+
+    			if (/*video*/ ctx[2]) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_1(ctx);
+    					if_block1.c();
+    					if_block1.m(nav, t6);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (/*help*/ ctx[3]) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block$1(ctx);
+    					if_block2.c();
+    					if_block2.m(nav, null);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -1537,8 +1774,8 @@ var app = (function () {
     			});
 
     			add_render_callback(() => {
-    				if (!div1_transition) div1_transition = create_bidirectional_transition(div1, fade, {}, true);
-    				div1_transition.run(1);
+    				if (!div2_transition) div2_transition = create_bidirectional_transition(div2, fade, {}, true);
+    				div2_transition.run(1);
     			});
 
     			current = true;
@@ -1547,15 +1784,20 @@ var app = (function () {
     			transition_out(appframe.$$.fragment, local);
     			if (!article_transition) article_transition = create_bidirectional_transition(article, fly, { x: -500, duration: 600 }, false);
     			article_transition.run(0);
-    			if (!div1_transition) div1_transition = create_bidirectional_transition(div1, fade, {}, false);
-    			div1_transition.run(0);
+    			if (!div2_transition) div2_transition = create_bidirectional_transition(div2, fade, {}, false);
+    			div2_transition.run(0);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div2);
     			destroy_component(appframe);
+    			/*div0_binding*/ ctx[10](null);
+    			if (if_block0) if_block0.d();
+    			/*div1_binding*/ ctx[12](null);
+    			if (if_block1) if_block1.d();
+    			if (if_block2) if_block2.d();
     			if (detaching && article_transition) article_transition.end();
-    			if (detaching && div1_transition) div1_transition.end();
+    			if (detaching && div2_transition) div2_transition.end();
     			mounted = false;
     			run_all(dispose);
     		}
@@ -1577,8 +1819,18 @@ var app = (function () {
     	validate_slots('AppDemo', slots, []);
     	const dispatch = createEventDispatcher();
     	let { id } = $$props;
-    	let title = id;
-    	const writable_props = ['id'];
+    	let { title } = $$props;
+    	let { video } = $$props;
+    	let { help } = $$props;
+
+    	// let title = id;
+    	let selected, sApp, sVideo, sHelp;
+
+    	onMount(() => {
+    		$$invalidate(4, selected = sApp);
+    	});
+
+    	const writable_props = ['id', 'title', 'video', 'help'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AppDemo> was created with unknown prop '${key}'`);
@@ -1586,37 +1838,95 @@ var app = (function () {
 
     	const click_handler = () => dispatch("close");
 
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			sApp = $$value;
+    			$$invalidate(5, sApp);
+    		});
+    	}
+
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			sVideo = $$value;
+    			$$invalidate(6, sVideo);
+    		});
+    	}
+
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			sHelp = $$value;
+    			$$invalidate(7, sHelp);
+    		});
+    	}
+
+    	const click_handler_1 = () => $$invalidate(4, selected = sApp);
+    	const click_handler_2 = () => $$invalidate(4, selected = sVideo);
+    	const click_handler_3 = () => $$invalidate(4, selected = sHelp);
+
     	$$self.$$set = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
+    		if ('title' in $$props) $$invalidate(1, title = $$props.title);
+    		if ('video' in $$props) $$invalidate(2, video = $$props.video);
+    		if ('help' in $$props) $$invalidate(3, help = $$props.help);
     	};
 
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
+    		onMount,
     		fade,
     		scale,
     		fly,
     		AppFrame,
     		dispatch,
     		id,
-    		title
+    		title,
+    		video,
+    		help,
+    		selected,
+    		sApp,
+    		sVideo,
+    		sHelp
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
-    		if ('title' in $$props) $$invalidate(2, title = $$props.title);
+    		if ('title' in $$props) $$invalidate(1, title = $$props.title);
+    		if ('video' in $$props) $$invalidate(2, video = $$props.video);
+    		if ('help' in $$props) $$invalidate(3, help = $$props.help);
+    		if ('selected' in $$props) $$invalidate(4, selected = $$props.selected);
+    		if ('sApp' in $$props) $$invalidate(5, sApp = $$props.sApp);
+    		if ('sVideo' in $$props) $$invalidate(6, sVideo = $$props.sVideo);
+    		if ('sHelp' in $$props) $$invalidate(7, sHelp = $$props.sHelp);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [id, dispatch, title, click_handler];
+    	return [
+    		id,
+    		title,
+    		video,
+    		help,
+    		selected,
+    		sApp,
+    		sVideo,
+    		sHelp,
+    		dispatch,
+    		click_handler,
+    		div0_binding,
+    		div_binding,
+    		div1_binding,
+    		click_handler_1,
+    		click_handler_2,
+    		click_handler_3
+    	];
     }
 
     class AppDemo extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { id: 0 });
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { id: 0, title: 1, video: 2, help: 3 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1631,6 +1941,18 @@ var app = (function () {
     		if (/*id*/ ctx[0] === undefined && !('id' in props)) {
     			console.warn("<AppDemo> was created without expected prop 'id'");
     		}
+
+    		if (/*title*/ ctx[1] === undefined && !('title' in props)) {
+    			console.warn("<AppDemo> was created without expected prop 'title'");
+    		}
+
+    		if (/*video*/ ctx[2] === undefined && !('video' in props)) {
+    			console.warn("<AppDemo> was created without expected prop 'video'");
+    		}
+
+    		if (/*help*/ ctx[3] === undefined && !('help' in props)) {
+    			console.warn("<AppDemo> was created without expected prop 'help'");
+    		}
     	}
 
     	get id() {
@@ -1640,9 +1962,33 @@ var app = (function () {
     	set id(value) {
     		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get title() {
+    		throw new Error("<AppDemo>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set title(value) {
+    		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get video() {
+    		throw new Error("<AppDemo>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set video(value) {
+    		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get help() {
+    		throw new Error("<AppDemo>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set help(value) {
+    		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
-    const appBlocks = [{"title": "Descriptive statistics and plots", "apps": [{"id": "asta-b101", "title": "Quantiles, quartiles, percentiles", "info": "How to compute simple statistics for a sample."}, {"id": "asta-b102", "title": "Samples and populations", "info": "How a sample taken from a population looks like."}, {"id": "asta-b103", "title": "PDF, CDF and ICDF", "info": "Main functions for theoretical distributions."}, {"id": "asta-b104", "title": "Quantile-quantile plot", "info": "How to create and interpret a QQ-plot."}]}, {"title": "Confidence intervals", "apps": [{"id": "asta-b201", "title": "Population based CI for proportion", "info": "Confidence interval for proportion, based on population parameter."}, {"id": "asta-b202", "title": "Sample based CI for proportion", "info": "Confidence interval for proportion, based on sample statistic."}, {"id": "asta-b203", "title": "Population based CI for mean", "info": "Confidence interval for mean, based on population parameter."}, {"id": "asta-b204", "title": "Sample based CI for mean", "info": "Confidence interval for mean, based on sample statistics."}]}, {"title": "Hypothesis testing", "apps": [{"id": "asta-b205", "title": "What p-value is?", "info": "Explanation of p-value using coin experiment."}, {"id": "asta-b206", "title": "Test for sample proportion", "info": "How test for proportion works."}, {"id": "asta-b207", "title": "One sample t-test", "info": "Test for mean of one sample."}, {"id": "asta-b208", "title": "Power of test and Type II error", "info": "How often you will be able to reject wrong H0."}]}, {"title": "Comparing means", "apps": [{"id": "asta-b209", "title": "Two sample t-test", "info": "How to compare mean of two samples.", "video": "https://www.youtube.com/watch?v=aircAruvnKk"}, {"id": "asta-b210", "title": "Multiple comparison and Bonferroni correction", "info": "What if we apply t-test to more than 2 groups."}, {"id": "asta-b211", "title": "One-way ANOVA (simplified)", "info": "How Analysis of Variance works for one factor."}, {"id": "asta-b212", "title": "One-way ANOVA (full)", "info": "A more detailed app."}]}];
+    const appBlocks = [{"title": "Descriptive statistics and plots", "apps": [{"id": "asta-b101", "title": "Quantiles, quartiles, percentiles", "info": "How to compute simple statistics for a sample.", "video": "https://www.youtube.com/embed/l_tnFhwRpjI", "help": "<h2>Quantiles, quartiles, percentiles</h2><p>This app shows calculation of main non-parametric descriptive statistics: <i>min</i>, <i>max</i>, <i>quartiles</i> and <i>percentils</i>. The plot contains current sample values as points and the traditional box and whiskers plot. The dashed line inside the box shows the mean. The red elements represent boundaries for detection of outliers (based on \u00b11.5IQR rule).</p><p>Try to change the smallest (<i>min</i>) or the largest (<i>max</i>) values of your current sample using the sliders in order to see what happens to the boxplot if one of the values will be outside the boundaries. You can also pay attention which statistics are changing and which remain stable in this case.</p><p>The table in the bottom shows the current values (<i>x</i>) ordered from smallest to largest, their rank (<i>i</i>), as well as their percentiles (<i>p</i>) also known as <em>sample quantiles</em>. The percentiles are computed using <code>(i - 0.5)/n</code> rule. The table on the right side shows the computed statistics.</p>"}, {"id": "asta-b102", "title": "Samples and populations", "info": "How a sample taken from a population looks like.", "video": "https://www.youtube.com/embed/hhGmFVMm5ZE", "help": "<h2>Samples and populations</h2> <p>This app helps you to investigate how different a sample can be when it is being randomly taken from corresponding population.</p> <p>You can investigate this difference for one of the three parameters: Height, Age and IQ of a population of people. Each parameter has own distribution. Thus, <em>Age</em> is distributed uniformly, <em>IQ</em> is distributed normally and <em>Height</em> has distribution with two peaks (bimodal). You can also see how sample size influences the difference.</p>  <p>Plot series made for a population (histogram and boxplot on the left part and percentile plot on the right) are shown using gray colors. The size of the population is <em>N</em> = 50&nbsp;000. The plot series for current sample are shown in blue. A new sample is taken when you change any of the controls \u2014 select the population parameter or the sample size as well as when you force to take a new sample by clicking the specific button.</p>"}, {"id": "asta-b103", "title": "PDF, CDF and ICDF", "info": "Main functions for theoretical distributions.", "video": "https://www.youtube.com/embed/hhGmFVMm5ZE", "help": "<h2>PDF, CDF, and ICDF</h2>  <p>This app lets you play with three main functions available for any theoretical distribution: <em>Probability Density Function</em> (PDF), <em>Cumulative Distribution Function</em> (CDF) and <em>Inverse Cumulative Distribution Function</em> (ICDF). The functions can be used for different purposes. Thus PDF shows a shape of distribution in form of a density of the values, the higher density \u2014 the bigger chance that your random value will be there. For example, in case of normal distribution, the highest density is around <em>mean</em>, so mean is the most expected value in this case.</p> <p>CDF function gives you a chance to get a value smaller than given. While the ICDF does the opposite \u2014 gives you a value for a given probability. The functions in this app can be used in \"Value\" mode, for a single value, as well as in \"Interval\" mode for an interval limited by two values.</p> <p>For example, we are talking about height of people, normally distributed with mean = 170 cm and std = 10 cm (initial settings of the app). What is a chance that a random person from this population will have height between 160 and 180 cm? Or, in other words, how many people in percent have height between these two values in the population? Just set <em>x</em><sub>1</sub> to 160 and <em>x</em><sub>2</sub> to 180 under the CDF plot and you will see the result (in this case the chance is around 0.683 or 68.3%).</p>"}, {"id": "asta-b104", "title": "Quantile-quantile plot", "info": "How to create and interpret a QQ-plot.", "video": "https://www.youtube.com/embed/G12DrRZAPHA", "help": "<h2>Quantile-quantile plot</h2><p>This app shows how to use quantile-quantile (QQ) plot to check if your values came from normally distributed population. In this case the values (height of people, <em>x</em>) are indeed randomly taken from a population, where they follow normal distribution with mean = 170 cm and standard deviation = 10 cm. The values of the current sample are shown in the large table as row <em>x</em> and on the plot as y-axis values.</p> <p>First, for every value <em>x</em> we compute probability <em>p</em>, to get a value even smaller, similar to what we did when computed percentiles. In this case we use <code>p = (i - 0.5) / n</code>. But if sample size is smaller than 10, the formula is slightly different: <code>p = (i - 0.375) / (n + 0.25)</code>. For example, if sample size = 6, then the first value (i = 1) will have the following p: <code>p = (1 - 0.375) / (6 + 0.25) = 0.100</code>.</p> <p>After that, for every <em>p</em> we find corresponding standard score, <em>z</em>, using ICDF function for normal distribution. For example, if p = 0.100, the z-score can be found to be equal to -1.28. You can check it using app for PDF/CDF/ICDF or in R by running <code>qnorm(0.100)</code>. Finally we make a plot where sample values, <em>x</em> are shown as y-axis and the <em>z</em>-scores are shown as x-axis. In case if values follow normal distribution ideally they have linear dependence on z-scores, so the points will lie close to a straight line, shown as blue. The closer real points are to this line the more likely that they came from normally distributed population.</p>"}]}, {"title": "Confidence intervals", "apps": [{"id": "asta-b201", "title": "Population based CI for proportion", "info": "Confidence interval for proportion, based on population parameter.", "video": "", "help": "<h2>Population based confidence interval for proportion</h2> <p>This app allows you to play with proportion of a random sample. Here we have a population with N = 1600 individuals. Some of them are red, some are blue. You can change the proportion of the red individuals as you want (by default it is 50%). The population is shown as large plot on the left.</p> <p>If we know proportion of population and sample size we can compute an interval of expected proportions of the future samples. So, when you take a new random sample of that size from the population, its proportion will likely to be inside the interval. This interval is called <em>confidence interval for proportion</em> and since we compute it based on proportion parameter, it is <em>population based</em>.</p> <p>The interval for selected population proportion and current sample size computed for 95% confidence level is shown as a red area under a distribution curve on the right. The vertical line on that plot is a proportion of your current sample. Try to take many samples and see how often the proportion of the sample will be inside the interval (text on the plot shows this information). If you repeat this many (hundreds) times, about 95% of the samples should have proportion within the interval. <strong>However this works only if number of individuals in each group is at least 5.</strong> So if proportion is 10% you need to have sample size n = 50 to meat this requirement.</p>"}, {"id": "asta-b202", "title": "Sample based CI for proportion", "info": "Confidence interval for proportion, based on sample statistic.", "video": "https://www.youtube.com/embed/3lQRSkjL5ac", "help": "<h2>Sample based confidence interval for proportion</h2> <p>This app is similar to <code>asta-b201</code>, but, in this case, confidence interval is computed based on sample proportion. This requires larger sample size, so for every category you need at least 10 individuals in your sample. For example, if proportion is 20%, you need sample size of at least n = 50 to make a reliable interval (20% of 50 is 10). For p = 10% the sample size should be n = 100.</p> <p>The app shows 95% confidence interval computed for current sample as a plot on the right side. So, every time you take a new sample, this also results in a new confidence interval. The vertical red line on this plot shows the population proportion, which in real life we do not know. If you take a new sample many times (say, 200-300) you can see how often the population proportion, \u03c0, was inside the interval. If sample size is large enough it should be close to 95% \u2014\u00a0the confidence level.</p>"}, {"id": "asta-b203", "title": "Population based CI for mean", "info": "Confidence interval for mean, based on population parameter.", "video": "https://www.youtube.com/embed/cX8ErwtKMc8", "help": "<h2>Population based confidence interval for mean</h2> <p>This app is similar to <code>asta-b201</code> but is made to give you an idea about uncertainty of sample mean. Here we have a normally distributed population \u2014\u00a0concentration of Chloride in different parts of a water source. The concentration has a fixed mean, <em>\u00b5</em> = 100 mg/L, and a standard deviation, <em>\u03c3</em>, which you can vary from 1 to 5 mg/L. The population distribution is shown using gray colors on the left plot. Blue points on that plot show values of a current sample, randomly taken from the population. The vertical lines show the corresponding means.</p> <p>If we know mean of population, <em>\u00b5</em>, and sample size, we can compute an interval of expected mean values of the future samples, <em>m</em>. So, when you take a new random sample of that size from the population, its mean value will likely to be inside the interval. This interval is called <em>confidence interval for mean</em>and since we compute it based on population parameter, it is <em>population based</em>.</p> <p>Right plot shows distribution of possible mean values of samples to be randomly taken from the current population (and for current sample size). Confidence interval, computed for 95% confidence level is shown as a gray area under the distribution curve. The blue vertical line on that plot is a mean of your current sample. Try to take many samples and see how often the mean of a sample will be inside the interval (table under the plot shows this information). If you repeat this many (hundreds) times, about 95% of the samples should have mean within the interval.</p>"}, {"id": "asta-b204", "title": "Sample based CI for mean", "info": "Confidence interval for mean, based on sample statistics.", "video": "https://www.youtube.com/embed/EgE6-NNyyPc", "help": "<h2>Sample based confidence interval for mean</h2> <p>This app is similar to <code>asta-b203</code>, but in this case confidence interval for mean is computed using sample statistics, so we pretend we do not know the population mean and want to estimate it as a value located inside this interval. Thus on the right plot you see distribution and 95% confidence interval computed for current sample. The population mean (which in real life is unknown) is shown as a vertical line.</p> <p>        Try to take many samples and see how often mean of the population will be inside confidence interval computed for the sample. If you repeat this many (hundreds) times, about 95% of the samples will have interval, which contains the population mean. So, before you take a new sample you have 95% chance that confidence interval, computed around the sample mean, will contain the population mean.</p> <p>In this case we use Student's t-distribution to compute the interval. For given confidence level (e.g. 95%) and for given sample size (e.g. 5) we define a critical t-value \u2014\u00a0how many standard errors the interval will span on each side of the sample mean. E.g. for n = 5 this value is 2.78. You can see this value for current sample size in the table with statistics. If you have R you can also compute this value using ICDF function for t-distribution: <code>qt(0.975, 4)</code>. Here 0.975 is the right boundary of 95% interval and 4 is a number of degrees of freedom, which in this case is equal to <nobr>n - 1</nobr>.</p>"}]}, {"title": "Hypothesis testing", "apps": [{"id": "asta-b205", "title": "What is p-value?", "info": "Explanation of p-value using coin experiment.", "video": "https://www.youtube.com/embed/6O7rExp8tCQ", "help": "<h2>What is p-value?</h2><p>This app helps to understand the meaning of a p-value in hypotheses testing:</p> <p><em>p-value is a chance to get a sample as extreme as the one you have or even more extreme assuming that the null hypothesis (H0) is true.</em></p> <p>In case if all outcomes of an experiment are equally likely, to compute a p-value we need to know: <em>N1</em> \u2014 number of possible outcomes which will be as extreme as the one we currently have, <em>N2</em> \u2014 number of outcomes which will be more extreme for given H0, and <em>N</em> \u2014 total number of all possible outcomes. In this case the p-value can be computed as: <strong>p = (N1 + N2)/N</strong>.</p> <p>However, when we deal with continuous variables, number of possible outcomes is infinite and different outcomes may have different probabilities, therefore we have to use theoretical distributions for computing chances, which will be also shown in next apps. But in this app we introduce p-values based on experiment with limited number of outcomes \u2014\u00a0tossing a balanced coin several times (4 or 6). So we can count <em>N1</em>, <em>N2</em> and <em>N</em> and compute the p-value manually.</p>"}, {"id": "asta-b206", "title": "Test for sample proportion", "info": "How test for proportion works.", "video": "https://www.youtube.com/embed/zU3K4WWx7dI", "help": "<h2>Test for sample proportion</h2><p>This app visualizes a test for proportion of a sample \u2014 how likely the current sample came from population with given H0. In this case H0 is true, our population indeed has a proportion, \u03c0, which we set manually in the app (the population is shown on the left plot). So we expect that the test will confirm the H0 most of the time.</p> <p>Every time you take a new sample, app computes standard error and makes sampling distribution of possible        proportions around \u03c0 using the computed standard error and normal distribution. After that it evaluates how extreme your sample is and results in a p-value \u2014\u00a0chance to get a sample with proportion like you have or even more extreme assuming that H0 is true. If you take many samples, e.g. 200 or 300, then only 5% will have a p-value below 0.05, you can see all statistics right on the plot.</p> <p>However, this will work only if sample size is large enough. Try to set the population proportion to \u03c0 = 0.05 or 0.95. You will see that in this case even sample with n = 40 is too small for the test \u2014 sampling distribution curve will be truncated on one side. This leads to two problems \u2014\u00a0you will see an extreme p-value more often than expected and you have a chance to get a sample with members only from one group, so the sample proportion will be either 0 or 1. In this case standard error is 0 and there is no possibility to make a test. You need much larger sample to make a reliable test for such cases.</p>"}, {"id": "asta-b207", "title": "One sample t-test", "info": "Test for mean of one sample.", "video": "https://www.youtube.com/embed/PuIns8Y3gjI", "help": "<h2>One-sample t-test</h2><p>This app helps to understand how does the one sample t-test work. Here we have a normally distributed population \u2014 concentration of Chloride in different parts of a water source. The null hypothesis in this case is made about the population mean, \u00b5, and, depending on a tail, you have the following options \u2014 \"both\": H0: \u00b5 = 100 mg/L, \"left\": \u00b5 \u2265 100 mg/L, and \"right\": \u00b5 \u2264 100 mg/L. The population in this app has \u00b5 exactly equal to 100 mg/L, so all three hypothesis are true in this case. You have a possibility to change the standard deviation of the population, which by default is set to 3 mg/L but you will see, that it does not influence the outcome of the test.</p> <p>Then you can take a random sample from this population and see how far the mean of the sample is from the mean of the population. The app computes a chance to get a sample as extreme as given or even more extreme assuming that H0 is correct \u2014\u00a0the <strong>p-value</strong>. Usually p-value is used to assess how extreme your particular sample is for being taken from population where H0 is true. If p-value is small, it is considered as unlikely event and H0 is rejected.</p> <p>Often researchers use 5% (0.05) as a threshold for that. It is called <em>significance limit</em>. You will see that if you take many samples (100 or more), you will find out that approximately 5% of the samples will have p-value below 0.05 although the H0 is true. And this happens regardless the sample size. So this threshold is simply a chance to make a wrong decision by rejection the correct H0. So, if you use 0.05 you have 5% chance to make a wrong decision and e.g. \"see\" an effect, which does not exist.</p>"}, {"id": "asta-b208", "title": "Power of test and Type II error", "info": "How often you will be able to reject wrong H0.", "video": "https://www.youtube.com/embed/zUS5HDe5lMk", "help": "<h2>Power of test and Type II errors</h2> <p>This app is similar to <code>asta-b207</code> where you played with one-sample t-test. However, in this case you can emulate situations when H0 is not true, meaning the true population mean, \u00b5 is different from what you expect by setting H0. The possibilities for H0 are the same, depending on a tail, you have the following options \u2014 \"left\": \u00b5 \u2265 100 mg/L, and \"right\": \u00b5 \u2264 100 mg/L. But now you can also change the real population mean and set it to be smaller or larger than 100 mg/L.</p> <p>Try to do this and check how often you will be able to reject H0 (in this case we work with significance level 0.05, so we reject H0 when p-value is below this value). A probability to reject wrong H0 is called a <strong>power of test</strong>. And the situation when you can not reject it is called <strong>Type II</strong> error or false negative. The probability to get Type II error is always opposite to the power of test, e.g. if power is 80% you have 20% chance to make a Type II error.</p> <p>The power of any test depends on several things. First of all it is the test itself \u2014\u00a0different methods have different power. Second, it depends on the <strong>size of effect</strong> \u2014 difference between H0 mean and the real population mean (H1). E.g. if H0 assumes that \u00b5 \u2264 100 and the real \u00b5 = 105, this difference is 5. Finally, power also depends on standard deviation of your population as well as on the sample size. The last has very important consequence \u2014\u00a0the smaller effect you want to detect, the larger sample size should be.</p>"}]}, {"title": "Comparing means", "apps": [{"id": "asta-b209", "title": "Two sample t-test", "info": "How to compare mean of two samples.", "video": "https://www.youtube.com/embed/OEA5l04eVdU", "help": "<h2>Two sample t-test</h2><p>This app shows how to compare means of two samples. In this case the objective is to find out if the samples were taken from populations with the same means (H0: \u00b51 = \u00b52) or not (H1: \u00b51 \u2260 \u00b52). Here we use this test to see if increasing a temperature influence the yield of a chemical reaction. So, the population 1 consists of all possible outcomes of the reaction running at T = 120\u00baC. The population 2 consists of all possible outcomes of the reaction running at T = 160\u00baC. We assume that there are no other systematic factors involved so the variation of yield within each population is totally random and is distributed normally. The left plot shows the corresponding distributions using blue and red colors.</p> <p>By default \u00b51 = \u00b52 = 100 mg. Since \u00b51 \u2013 \u00b52 = 0, we can say that in this case <em>temperature does not have any effect on yield</em>. However, if we run the reactions just a few times (e.g. 3 for each temperature) you will always observe an effect and therefore you need to asses how likely you observe it just by chance.</p> <p>Use the app and investigate how often you will see an effect, which is not present and, vice versa, how often you will not be able to detect an existent effect. Check how the real (expected) effect size, noise and sample size influence this ability. The app works using significance level 0.05 but remember that for real applications it is better to use smaller value for the level.</p>"}, {"id": "asta-b210", "title": "Multiple comparison and Bonferroni correction", "info": "What if we apply t-test to more than 2 groups.", "video": "https://www.youtube.com/embed/1qh7Ibfeveg", "help": "<h2>Multiple t-test and Bonferroni correction</h2> <p>This app shows how to compare three samples taken from three populations. The three populations are all outcomes (yield measured in mg/L) of a chemical process running with a catalyst A, catalyst B and catalyst C. Here H0: \u00b5A = \u00b5B = \u00b5C = 100 mg/L. This means that regardless which catalyst we use, the average yield of the reaction is 100 mg/L, so changing catalyst has no effect on the yield. But when we run the reaction only 5 times for each catalyst, like shown in the app, the mean of these 5 runs will not be the same as the expected mean of the populations. And most of the time you will observe a difference among the sample means. Our goal is to use a t-test to test the H0 and make decision.</p> <p>However, t-test can be applied for comparing mean of two samples, while here we have three. One of the possibility will be to run t-test three times \u2014\u00a0one for each pair. This is what is called a <em>multiple compare</em> \u2014\u00a0you compare samples using several tests to check a single hypothesis. But the more tests you do the higher chance that you will reject correct H0. Try to run the test many times and you will see that although app works at significance limit 0.05 (so we expect that the H0 will be incorrectly rejected in 5% of cases), the real percent of rejections will be higher, about 10%.</p><p>You can overcome this problem by using Bonferroni correction, which decreases the significance limit in each individual tests, so the overall significance will be 0.05 (or any other pre-defined value). You can see the effect of correction by turning it on in the app and repeating the sampling many times again. In this case the significance level for individual tests will be set to 0.05/3 \u2248\u00a00.017 and the number of incorrectly rejected H0 will be around 5%.</p>"}, {"id": "asta-b211", "title": "One-way ANOVA (simplified)", "info": "How Analysis of Variance works for one factor.", "video": "https://www.youtube.com/embed/NMaIEHWkI5A", "help": "<h2>One way ANOVA</h2> <p>This app shows how one-way ANOVA tests means of three samples \u2014 the outcomes of a chemical reaction running using three different catalysis: <em>A</em>, <em>B</em> and <em>C</em>. We \"run\" the reaction with each catalyst 5 times, which gives 15 values \u2014 yield of each run in mg. The obtained yield values are shown in the top left table. The last row shows the average yield for each catalyst. You can adjust the expected effect for each catalyst and noise using slider controls.</p> <p>Then app computes a global mean for all original values and subtract it from the values thus creating a table with unbiased values, which are shown in the gray column. Table in the top of the column contains the unbiased values and their means. Under the table there are statistics: degrees of freedom (DoF), sum of squared values (SSQ) and variance or mean squares (MS = SSQ/DoF). Plot below shows boxplots for populations and points for the values.</p> <p>After that we split the unbiased values into a sum of <em>systematic</em> part, shown in the green column, and the <em>residuals</em>,\u00a0shown in the red column. In the systematic part we assume there is no noise, so all outcomes for given factor level (e.g. column A) have the same value \u2014 the corresponding mean. Residuals are computed as a difference between the unbiased values and the systematic part. App computes DoF, SSQ and MS for each part and the F-value \u2014\u00a0which is a ratio of MS for systematic part and residuals. The F-value follows F-distribution shown under the original data table. We use this distribution to compute corresponding p-value and make decision about the H0.</p>"}, {"id": "asta-b212", "title": "One-way ANOVA (full)", "info": "A more detailed app.", "video": "https://www.youtube.com/embed/k738X17uNUc", "help": "<h2>One way ANOVA (full)</h2> <p>This app is almost identical to the <code>asta-b211</code> but here we show calculations as they are without subtracting the global mean in advance. The results are absolutely identical but this time without additional step of unbiasing the values. Plus the app shows importance of QQ plot for residuals which helps to assess their normality.</p>"}]}];
 
     /* src/App.svelte generated by Svelte v3.42.4 */
     const file = "src/App.svelte";
@@ -1653,16 +1999,18 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (39:0) {#if demoOn && appID}
+    // (39:0) {#if demoOn && appInfo}
     function create_if_block(ctx) {
     	let appdemo;
     	let current;
+    	const appdemo_spread_levels = [/*appInfo*/ ctx[3]];
+    	let appdemo_props = {};
 
-    	appdemo = new AppDemo({
-    			props: { id: /*appID*/ ctx[3] },
-    			$$inline: true
-    		});
+    	for (let i = 0; i < appdemo_spread_levels.length; i += 1) {
+    		appdemo_props = assign(appdemo_props, appdemo_spread_levels[i]);
+    	}
 
+    	appdemo = new AppDemo({ props: appdemo_props, $$inline: true });
     	appdemo.$on("close", /*closeDemo*/ ctx[6]);
 
     	const block = {
@@ -1674,8 +2022,10 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const appdemo_changes = {};
-    			if (dirty & /*appID*/ 8) appdemo_changes.id = /*appID*/ ctx[3];
+    			const appdemo_changes = (dirty & /*appInfo*/ 8)
+    			? get_spread_update(appdemo_spread_levels, [get_spread_object(/*appInfo*/ ctx[3])])
+    			: {};
+
     			appdemo.$set(appdemo_changes);
     		},
     		i: function intro(local) {
@@ -1696,7 +2046,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(39:0) {#if demoOn && appID}",
+    		source: "(39:0) {#if demoOn && appInfo}",
     		ctx
     	});
 
@@ -1771,7 +2121,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*demoOn*/ ctx[2] && /*appID*/ ctx[3] && create_if_block(ctx);
+    	let if_block = /*demoOn*/ ctx[2] && /*appInfo*/ ctx[3] && create_if_block(ctx);
     	let each_value = /*appBlocksShow*/ ctx[1].filter(func);
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -1805,14 +2155,14 @@ var app = (function () {
     			each_1_anchor = empty();
     			attr_dev(input, "placeholder", "Enter a single keyword (e.g. interval)");
     			attr_dev(input, "class", "svelte-12lrilt");
-    			add_location(input, file, 43, 3, 1249);
+    			add_location(input, file, 43, 3, 1259);
     			attr_dev(button, "class", "svelte-12lrilt");
     			toggle_class(button, "hidden", /*searchStr*/ ctx[0].length < 1);
-    			add_location(button, file, 44, 3, 1363);
+    			add_location(button, file, 44, 3, 1373);
     			attr_dev(span, "class", "svelte-12lrilt");
-    			add_location(span, file, 45, 3, 1467);
+    			add_location(span, file, 45, 3, 1477);
     			attr_dev(div, "class", "search-block svelte-12lrilt");
-    			add_location(div, file, 42, 0, 1219);
+    			add_location(div, file, 42, 0, 1229);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1848,11 +2198,11 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*demoOn*/ ctx[2] && /*appID*/ ctx[3]) {
+    			if (/*demoOn*/ ctx[2] && /*appInfo*/ ctx[3]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*demoOn, appID*/ 12) {
+    					if (dirty & /*demoOn, appInfo*/ 12) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -1961,11 +2311,11 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	let demoOn = false;
-    	let appID = undefined;
+    	let appInfo = undefined;
     	let searchStr = "";
 
     	function showDemo(e) {
-    		$$invalidate(3, appID = e.detail);
+    		$$invalidate(3, appInfo = e.detail);
     		$$invalidate(2, demoOn = true);
     		document.querySelector("body").style.overflow = "hidden";
     	}
@@ -1975,7 +2325,7 @@ var app = (function () {
     	function closeDemo(e) {
     		document.querySelector("body").style.overflow = "auto";
     		$$invalidate(2, demoOn = false);
-    		$$invalidate(3, appID = undefined);
+    		$$invalidate(3, appInfo = undefined);
     	}
 
     	
@@ -2002,7 +2352,7 @@ var app = (function () {
     		AppDemo,
     		appBlocks,
     		demoOn,
-    		appID,
+    		appInfo,
     		searchStr,
     		showDemo,
     		closeDemo,
@@ -2014,7 +2364,7 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('demoOn' in $$props) $$invalidate(2, demoOn = $$props.demoOn);
-    		if ('appID' in $$props) $$invalidate(3, appID = $$props.appID);
+    		if ('appInfo' in $$props) $$invalidate(3, appInfo = $$props.appInfo);
     		if ('searchStr' in $$props) $$invalidate(0, searchStr = $$props.searchStr);
     		if ('numApps' in $$props) $$invalidate(8, numApps = $$props.numApps);
     		if ('appListInfo' in $$props) $$invalidate(4, appListInfo = $$props.appListInfo);
@@ -2050,7 +2400,7 @@ var app = (function () {
     		searchStr,
     		appBlocksShow,
     		demoOn,
-    		appID,
+    		appInfo,
     		appListInfo,
     		showDemo,
     		closeDemo,
