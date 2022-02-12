@@ -1455,7 +1455,7 @@ var app = (function () {
     			attr_dev(iframe, "allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
     			iframe.allowFullscreen = true;
     			add_location(iframe, file$1, 32, 12, 990);
-    			attr_dev(div, "class", "content-container svelte-rmm33d");
+    			attr_dev(div, "class", "content-container svelte-10u3gs0");
     			toggle_class(div, "hidden", /*selected*/ ctx[4] != /*sVideo*/ ctx[6]);
     			add_location(div, file$1, 31, 9, 895);
     		},
@@ -1502,7 +1502,7 @@ var app = (function () {
     			a.textContent = "Video";
     			attr_dev(a, "href", "#2");
     			attr_dev(a, "role", "tab");
-    			attr_dev(a, "class", "svelte-rmm33d");
+    			attr_dev(a, "class", "svelte-10u3gs0");
     			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sVideo*/ ctx[6]);
     			add_location(a, file$1, 43, 12, 1636);
     		},
@@ -1549,7 +1549,7 @@ var app = (function () {
     			a.textContent = "Info";
     			attr_dev(a, "href", "#3");
     			attr_dev(a, "role", "tab");
-    			attr_dev(a, "class", "svelte-rmm33d");
+    			attr_dev(a, "class", "svelte-10u3gs0");
     			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sHelp*/ ctx[7]);
     			add_location(a, file$1, 46, 12, 1806);
     		},
@@ -1641,31 +1641,31 @@ var app = (function () {
     			t6 = space();
     			if (if_block2) if_block2.c();
     			attr_dev(h2, "title", "click to close");
-    			attr_dev(h2, "class", "svelte-rmm33d");
+    			attr_dev(h2, "class", "svelte-10u3gs0");
     			add_location(h2, file$1, 24, 9, 580);
-    			attr_dev(header, "class", "modal-header svelte-rmm33d");
+    			attr_dev(header, "class", "modal-header svelte-10u3gs0");
     			add_location(header, file$1, 23, 6, 541);
-    			attr_dev(div0, "class", "content-container svelte-rmm33d");
+    			attr_dev(div0, "class", "content-container svelte-10u3gs0");
     			toggle_class(div0, "hidden", /*selected*/ ctx[4] != /*sApp*/ ctx[5]);
     			add_location(div0, file$1, 27, 9, 740);
-    			attr_dev(div1, "class", "content-container helptext svelte-rmm33d");
+    			attr_dev(div1, "class", "content-container helptext svelte-10u3gs0");
     			toggle_class(div1, "hidden", /*selected*/ ctx[4] != /*sHelp*/ ctx[7]);
     			add_location(div1, file$1, 35, 9, 1247);
-    			attr_dev(section, "class", "modal-content svelte-rmm33d");
+    			attr_dev(section, "class", "modal-content svelte-10u3gs0");
     			add_location(section, file$1, 26, 6, 699);
     			attr_dev(a, "href", "#1");
     			attr_dev(a, "role", "tab");
-    			attr_dev(a, "class", "svelte-rmm33d");
+    			attr_dev(a, "class", "svelte-10u3gs0");
     			toggle_class(a, "selected", /*selected*/ ctx[4] == /*sApp*/ ctx[5]);
     			add_location(a, file$1, 41, 12, 1489);
-    			attr_dev(nav, "class", "tablist svelte-rmm33d");
+    			attr_dev(nav, "class", "tablist svelte-10u3gs0");
     			attr_dev(nav, "role", "tablist");
     			add_location(nav, file$1, 40, 9, 1440);
-    			attr_dev(footer, "class", "modal-footer svelte-rmm33d");
+    			attr_dev(footer, "class", "modal-footer svelte-10u3gs0");
     			add_location(footer, file$1, 39, 6, 1401);
-    			attr_dev(article, "class", "modal svelte-rmm33d");
+    			attr_dev(article, "class", "modal svelte-10u3gs0");
     			add_location(article, file$1, 22, 3, 464);
-    			attr_dev(div2, "class", "backstage svelte-rmm33d");
+    			attr_dev(div2, "class", "backstage svelte-10u3gs0");
     			add_location(div2, file$1, 21, 0, 421);
     		},
     		l: function claim(nodes) {

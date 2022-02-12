@@ -60,7 +60,7 @@
    .tablist a, .tablist a:focus, .tablist a:active {
       text-decoration: none;
       background: transparent;
-      color: #606060;
+      color: #a0a0a0;
       height: 100%;
       display: inline-block;
       font-size: 0.7em;
