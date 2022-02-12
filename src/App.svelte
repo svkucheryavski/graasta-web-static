@@ -4,11 +4,11 @@
    import appBlocks from "../public/apps/apps";
 
    let demoOn = false;
-   let appID = undefined;
+   let appInfo = undefined;
    let searchStr = "";
 
    function showDemo(e) {
-      appID = e.detail;
+      appInfo = e.detail;
       demoOn = true;
       document.querySelector("body").style.overflow = "hidden";
    };
@@ -16,7 +16,7 @@
    function closeDemo(e) {
       document.querySelector("body").style.overflow = "auto";
       demoOn = false
-      appID = undefined;
+      appInfo = undefined;
    };
 
    function resetSearch(e = undefined) {
@@ -36,8 +36,8 @@
    $: appListInfo =  searchStr.length > 0 ? `Found ${numApps} app${numApps > 1 ? "s" : ""}` : `${numApps} apps in the list.`;
 </script>
 
-{#if demoOn && appID}
-<AppDemo id={appID} on:close={closeDemo} />
+{#if demoOn && appInfo}
+<AppDemo {...appInfo} on:close={closeDemo} />
 {/if}
 
 <div class="search-block">

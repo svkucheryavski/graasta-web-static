@@ -1,31 +1,105 @@
 <script>
-   import { createEventDispatcher } from "svelte";
+   import { createEventDispatcher, onMount } from "svelte";
    import { fade, scale, fly } from "svelte/transition";
 
    import AppFrame from "./AppFrame.svelte";
    const dispatch = createEventDispatcher();
 
    export let id;
-   let title = id;
+   export let title;
+   export let video;
+   export let help;
+
+
+   // let title = id;
+   let selected, sApp, sVideo, sHelp;
+
+   onMount(() => {
+      selected = sApp;
+      // check that url to app demo exists
+      const appUrl = "/apps/" + id + "/index.html";
+      const  request = new XMLHttpRequest();
+
+      request.open("GET", appUrl, true);
+      request.onreadystatechange = function(){
+         if (request.readyState === 4){
+            if (request.status === 404) {
+               appSrc = "";
+               loaded = false;
+            } else {
+               console.log(request.response)
+               appSrc = appUrl;
+               loaded = true;
+            }
+         }
+      };
+      request.send();
+   });
+
 </script>
 
-<div transition:fade class="backstage" on:click={() => dispatch("close")}>
-   <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal" on:click={null}>
+<div transition:fade class="backstage">
+   <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
       <header class="modal-header">
-         <h2>{@html title}</h2>
+         <h2 on:click|stopPropagation={() => dispatch("close")}>{@html title}</h2>
       </header>
       <section class="modal-content">
-         <div class="content-container">
+         <div class="content-container" class:hidden={selected!=sApp} bind:this={sApp}>
             <AppFrame {id} />
+         </div>
+         {#if video}
+         <div class="content-container" class:hidden={selected!=sVideo} bind:this={sVideo}>
+            <iframe width="100%" height="100%" src="{video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+         </div>
+         {/if}
+         <div class="content-container helptext" class:hidden={selected!=sHelp} bind:this={sHelp}>
+            {@html help}
          </div>
       </section>
       <footer class="modal-footer">
-
+         <nav class="tablist" role="tablist">
+            <a href="#1" role="tab" class:selected={selected==sApp} on:click|stopPropagation={() => selected=sApp}>App</a>
+            {#if video}
+            <a href="#2" role="tab" class:selected={selected==sVideo} on:click|stopPropagation={() => selected=sVideo}>Video</a>
+            {/if}
+            {#if help}
+            <a href="#3" role="tab" class:selected={selected==sHelp} on:click|stopPropagation={() => selected=sHelp}>Info</a>
+            {/if}
+         </nav>
       </footer>
    </article>
 </div>
 
 <style>
+   .tablist {
+      padding: 0;
+      margin: 0;
+   }
+
+   .tablist a, .tablist a:focus, .tablist a:active {
+      text-decoration: none;
+      background: transparent;
+      color: #606060;
+      height: 100%;
+      display: inline-block;
+      font-size: 0.7em;
+      padding: 0 0.25em;
+      margin: 0 0.25em;
+   }
+
+   .modal-footer a:hover {
+      color: #ff9900;
+   }
+
+   .modal-footer a.selected {
+      color: #e0e0e0;
+      font-weight: bold;
+      border-top: solid 5px #fefefe;
+   }
+
+   .hidden {
+      display: none;
+   }
 
    .backstage {
       position: fixed;
@@ -33,8 +107,8 @@
       left:0;
       right: 0;
       bottom: 0;
-      background: rgba(0.2, 0, 0, 0.75);
-
+      /* background: rgba(0.2, 0, 0, 0.85); */
+      background: #303030;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -65,8 +139,7 @@
       text-align: center;
       height: 1.75em;
       font-size: 1.25em;
-      font-weight: 500;
-      padding: 0.25em;
+      padding: 0;
    }
 
 
@@ -74,7 +147,7 @@
       text-align: center;
       font-size: 1.25em;
       font-weight: 500;
-      padding: 0.25em;
+      padding: 0.5em;
       color: #e0e0e0;
    }
 
@@ -97,8 +170,8 @@
 
    .modal-content  {
       margin: 0 auto;
-      padding: 10px;
-      background: white;
+      padding: 5px;
+      background: #fefefe;
       height: max-content;
       overflow: auto;
       width: 100%;
@@ -116,7 +189,27 @@
       aspect-ratio: 16/9;
       margin: 0 auto;
       padding: 0;
-      background: #fafafa;
+      background: #fefefe;
+   }
+
+   /* help text and button */
+
+   .helptext {
+      padding: 1em;
+      line-height: 1.35em;
+      font-size: 1em;
+      color: #303030;
+   }
+
+   .helptext :global(h2) {
+      padding: 1em 0 0.5em 0;
+      font-size: 1.2em;
+   }
+
+   .helptext :global(p) {
+      padding: 0 0 0.5em 0;
+      line-height: 1.5em;
+      font-size: 1em;
    }
 </style>
 

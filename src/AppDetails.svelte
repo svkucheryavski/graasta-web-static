@@ -4,6 +4,7 @@
    export let id;
    export let title;
    export let info;
+   export let help = undefined;
    export let video = undefined;
 
    const dispatch = createEventDispatcher();
@@ -15,9 +16,8 @@
       <h3>{title}</h3>
       <p>{info}</p>
       <div class="toolbar">
-         <span title="Run demo" on:click={() => dispatch("showdemo", id)}>Try</span>
+         <span title="Run demo" on:click={() => dispatch("showdemo", {id, title, video, help})}>Try</span>
          <a title="Download" href="/apps/{id}.zip">Download</a>
-         <!-- {#if video}<a title="Link to YouTube video" href="{video}">Video-lesson</a>{/if} -->
       </div>
    </div>
 </div>
