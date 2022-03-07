@@ -16,8 +16,11 @@
       <h3>{title}</h3>
       <p>{info}</p>
       <div class="toolbar">
-         <span title="Run demo" on:click={() => dispatch("showdemo", {id, title, video, help})}>Try</span>
-         <a title="Download" href="/apps/{id}.zip">Download</a>
+         <span class="toolbar__link toolbar__link_try" title="Run demo" on:click={() => dispatch("showdemo", {id, title, video, help, tab: "app"})}>Try</span>
+         {#if video}
+         <span class="toolbar__link toolbar__link_watch" title="Video" on:click={() => dispatch("showdemo", {id, title, video, help, tab: "video"})}>Watch</span>
+         {/if}
+         <a class="toolbar__link toolbar__link_download" title="Download" href="/apps/{id}.zip">Download</a>
       </div>
    </div>
 </div>
@@ -69,9 +72,8 @@
    }
 
    .app-details:hover  .toolbar > * {
-      color: #808080;
-      background: #f8f8f8;
-      border: 1px solid #d0d0d0;
+      background: #b0b0b0;
+      color: #f8f8f8;
    }
 
    .app-info {
@@ -86,7 +88,7 @@
       padding: 0;
    }
 
-   .toolbar > span, a {
+   .toolbar__link {
       display: inline;
 
       color: #a0a0a0;
@@ -96,18 +98,41 @@
 
       padding: 1px 5px;
       background: #fafafa;
-      border: 1px solid #e0e0e0;
       border-radius: 3px;
 
       margin: 0;
-      margin-right: 3px;
+      margin-right: 10px;
       cursor: pointer;
    }
+
+   .toolbar__link::before {
+      display: inline-block;
+      content: "   ";
+      padding: 0 0.25em 0 0;
+      color: #e0e0e0;
+   }
+
+   .toolbar__link_download::before {
+      content: "⬇";
+   }
+
+   .toolbar__link_try::before {
+      content: "◉";
+   }
+
+   .toolbar__link_watch::before {
+      content: "►";
+      font-size: 0.8em;
+   }
+
 
    .app-details:hover  .toolbar > *:hover {
       background: #ff9900;
       color: #fafafa;
-      border: 1px solid #ff9900;
+   }
+
+   .app-details:hover  .toolbar > *:hover::before  {
+      color: #fafafa
    }
 
    p {

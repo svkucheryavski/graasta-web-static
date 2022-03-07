@@ -9,12 +9,13 @@
    export let title;
    export let video;
    export let help;
+   export let tab = "app";
 
    // let title = id;
    let selected, sApp, sVideo, sHelp;
 
    onMount(() => {
-      selected = sApp;
+      selected = tab === "video" ? sVideo : sApp;
    });
 
    function handleKeydown(event) {
