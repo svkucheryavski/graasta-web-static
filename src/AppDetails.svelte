@@ -121,7 +121,7 @@
    }
 
    .toolbar__link_watch::before {
-      content: "►\FE0E";
+      content: "▶\FE0E";
       font-size: 0.8em;
    }
 
