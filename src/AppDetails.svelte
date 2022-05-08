@@ -113,15 +113,15 @@
    }
 
    .toolbar__link_download::before {
-      content: "⬇";
+      content: "⬇\FE0E";
    }
 
    .toolbar__link_try::before {
-      content: "◉";
+      content: "◉\FE0E";
    }
 
    .toolbar__link_watch::before {
-      content: "►";
+      content: "►\FE0E";
       font-size: 0.8em;
    }
 
