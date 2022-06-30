@@ -1496,10 +1496,10 @@ var app = (function () {
     			attr_dev(iframe, "frameborder", "0");
     			attr_dev(iframe, "allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
     			iframe.allowFullscreen = true;
-    			add_location(iframe, file$1, 35, 12, 1036);
-    			attr_dev(div, "class", "content-container svelte-1wzleao");
+    			add_location(iframe, file$1, 35, 12, 1055);
+    			attr_dev(div, "class", "content-container svelte-1x2g6sw");
     			toggle_class(div, "hidden", /*tab*/ ctx[4] != "video");
-    			add_location(div, file$1, 34, 9, 961);
+    			add_location(div, file$1, 34, 9, 980);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1542,9 +1542,9 @@ var app = (function () {
     			t = text("Video");
     			attr_dev(a, "role", "tab");
     			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/video");
-    			attr_dev(a, "class", "svelte-1wzleao");
+    			attr_dev(a, "class", "svelte-1x2g6sw");
     			toggle_class(a, "selected", /*tab*/ ctx[4] === "video");
-    			add_location(a, file$1, 46, 12, 1619);
+    			add_location(a, file$1, 46, 12, 1638);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1587,9 +1587,9 @@ var app = (function () {
     			t = text("Info");
     			attr_dev(a, "role", "tab");
     			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/info");
-    			attr_dev(a, "class", "svelte-1wzleao");
+    			attr_dev(a, "class", "svelte-1x2g6sw");
     			toggle_class(a, "selected", /*tab*/ ctx[4] === "info");
-    			add_location(a, file$1, 49, 12, 1746);
+    			add_location(a, file$1, 49, 12, 1765);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1625,7 +1625,6 @@ var app = (function () {
     	let article;
     	let header;
     	let h2;
-    	let a0;
     	let t0;
     	let section;
     	let div0;
@@ -1636,9 +1635,9 @@ var app = (function () {
     	let t3;
     	let footer;
     	let nav;
-    	let a1;
+    	let a;
     	let t4;
-    	let a1_href_value;
+    	let a_href_value;
     	let t5;
     	let t6;
     	let article_transition;
@@ -1662,7 +1661,6 @@ var app = (function () {
     			article = element("article");
     			header = element("header");
     			h2 = element("h2");
-    			a0 = element("a");
     			t0 = space();
     			section = element("section");
     			div0 = element("div");
@@ -1674,41 +1672,38 @@ var app = (function () {
     			t3 = space();
     			footer = element("footer");
     			nav = element("nav");
-    			a1 = element("a");
+    			a = element("a");
     			t4 = text("App");
     			t5 = space();
     			if (if_block1) if_block1.c();
     			t6 = space();
     			if (if_block2) if_block2.c();
-    			attr_dev(a0, "href", "/");
-    			attr_dev(a0, "class", "svelte-1wzleao");
-    			add_location(a0, file$1, 27, 36, 727);
     			attr_dev(h2, "title", "click to close");
-    			attr_dev(h2, "class", "svelte-1wzleao");
+    			attr_dev(h2, "class", "svelte-1x2g6sw");
     			add_location(h2, file$1, 27, 9, 700);
-    			attr_dev(header, "class", "modal-header svelte-1wzleao");
+    			attr_dev(header, "class", "modal-header svelte-1x2g6sw");
     			add_location(header, file$1, 26, 6, 661);
-    			attr_dev(div0, "class", "content-container svelte-1wzleao");
+    			attr_dev(div0, "class", "content-container svelte-1x2g6sw");
     			toggle_class(div0, "hidden", /*tab*/ ctx[4] != "app");
-    			add_location(div0, file$1, 30, 9, 825);
-    			attr_dev(div1, "class", "content-container helptext svelte-1wzleao");
+    			add_location(div0, file$1, 30, 9, 844);
+    			attr_dev(div1, "class", "content-container helptext svelte-1x2g6sw");
     			toggle_class(div1, "hidden", /*tab*/ ctx[4] != "info");
-    			add_location(div1, file$1, 38, 9, 1293);
-    			attr_dev(section, "class", "modal-content svelte-1wzleao");
-    			add_location(section, file$1, 29, 6, 784);
-    			attr_dev(a1, "role", "tab");
-    			attr_dev(a1, "href", a1_href_value = "#" + /*id*/ ctx[0] + "/app");
-    			attr_dev(a1, "class", "svelte-1wzleao");
-    			toggle_class(a1, "selected", /*tab*/ ctx[4] === "app");
-    			add_location(a1, file$1, 44, 12, 1515);
-    			attr_dev(nav, "class", "tablist svelte-1wzleao");
+    			add_location(div1, file$1, 38, 9, 1312);
+    			attr_dev(section, "class", "modal-content svelte-1x2g6sw");
+    			add_location(section, file$1, 29, 6, 803);
+    			attr_dev(a, "role", "tab");
+    			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/app");
+    			attr_dev(a, "class", "svelte-1x2g6sw");
+    			toggle_class(a, "selected", /*tab*/ ctx[4] === "app");
+    			add_location(a, file$1, 44, 12, 1534);
+    			attr_dev(nav, "class", "tablist svelte-1x2g6sw");
     			attr_dev(nav, "role", "tablist");
-    			add_location(nav, file$1, 43, 9, 1466);
-    			attr_dev(footer, "class", "modal-footer svelte-1wzleao");
-    			add_location(footer, file$1, 42, 6, 1427);
-    			attr_dev(article, "class", "modal svelte-1wzleao");
+    			add_location(nav, file$1, 43, 9, 1485);
+    			attr_dev(footer, "class", "modal-footer svelte-1x2g6sw");
+    			add_location(footer, file$1, 42, 6, 1446);
+    			attr_dev(article, "class", "modal svelte-1x2g6sw");
     			add_location(article, file$1, 25, 3, 584);
-    			attr_dev(div2, "class", "backstage svelte-1wzleao");
+    			attr_dev(div2, "class", "backstage svelte-1x2g6sw");
     			add_location(div2, file$1, 24, 0, 541);
     		},
     		l: function claim(nodes) {
@@ -1719,8 +1714,7 @@ var app = (function () {
     			append_dev(div2, article);
     			append_dev(article, header);
     			append_dev(header, h2);
-    			append_dev(h2, a0);
-    			a0.innerHTML = /*title*/ ctx[1];
+    			h2.innerHTML = /*title*/ ctx[1];
     			append_dev(article, t0);
     			append_dev(article, section);
     			append_dev(section, div0);
@@ -1733,8 +1727,8 @@ var app = (function () {
     			append_dev(article, t3);
     			append_dev(article, footer);
     			append_dev(footer, nav);
-    			append_dev(nav, a1);
-    			append_dev(a1, t4);
+    			append_dev(nav, a);
+    			append_dev(a, t4);
     			append_dev(nav, t5);
     			if (if_block1) if_block1.m(nav, null);
     			append_dev(nav, t6);
@@ -1742,12 +1736,16 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "keydown", /*handleKeydown*/ ctx[5], false, false, false);
+    				dispose = [
+    					listen_dev(window, "keydown", /*handleKeydown*/ ctx[6], false, false, false),
+    					listen_dev(h2, "click", /*click_handler*/ ctx[8], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*title*/ 2) a0.innerHTML = /*title*/ ctx[1];			const appframe_changes = {};
+    			if (!current || dirty & /*title*/ 2) h2.innerHTML = /*title*/ ctx[1];			const appframe_changes = {};
     			if (dirty & /*id*/ 1) appframe_changes.id = /*id*/ ctx[0];
     			appframe.$set(appframe_changes);
 
@@ -1773,12 +1771,12 @@ var app = (function () {
     				toggle_class(div1, "hidden", /*tab*/ ctx[4] != "info");
     			}
 
-    			if (!current || dirty & /*id*/ 1 && a1_href_value !== (a1_href_value = "#" + /*id*/ ctx[0] + "/app")) {
-    				attr_dev(a1, "href", a1_href_value);
+    			if (!current || dirty & /*id*/ 1 && a_href_value !== (a_href_value = "#" + /*id*/ ctx[0] + "/app")) {
+    				attr_dev(a, "href", a_href_value);
     			}
 
     			if (dirty & /*tab*/ 16) {
-    				toggle_class(a1, "selected", /*tab*/ ctx[4] === "app");
+    				toggle_class(a, "selected", /*tab*/ ctx[4] === "app");
     			}
 
     			if (/*video*/ ctx[2]) {
@@ -1840,7 +1838,7 @@ var app = (function () {
     			if (detaching && article_transition) article_transition.end();
     			if (detaching && div2_transition) div2_transition.end();
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -1879,12 +1877,14 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AppDemo> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = () => dispatch("close");
+
     	$$self.$$set = $$props => {
     		if ('id' in $$props) $$invalidate(0, id = $$props.id);
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('video' in $$props) $$invalidate(2, video = $$props.video);
     		if ('help' in $$props) $$invalidate(3, help = $$props.help);
-    		if ('info' in $$props) $$invalidate(6, info = $$props.info);
+    		if ('info' in $$props) $$invalidate(7, info = $$props.info);
     		if ('tab' in $$props) $$invalidate(4, tab = $$props.tab);
     	};
 
@@ -1909,7 +1909,7 @@ var app = (function () {
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('video' in $$props) $$invalidate(2, video = $$props.video);
     		if ('help' in $$props) $$invalidate(3, help = $$props.help);
-    		if ('info' in $$props) $$invalidate(6, info = $$props.info);
+    		if ('info' in $$props) $$invalidate(7, info = $$props.info);
     		if ('tab' in $$props) $$invalidate(4, tab = $$props.tab);
     	};
 
@@ -1917,7 +1917,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [id, title, video, help, tab, handleKeydown, info];
+    	return [id, title, video, help, tab, dispatch, handleKeydown, info, click_handler];
     }
 
     class AppDemo extends SvelteComponentDev {
@@ -1929,7 +1929,7 @@ var app = (function () {
     			title: 1,
     			video: 2,
     			help: 3,
-    			info: 6,
+    			info: 7,
     			tab: 4
     		});
 
@@ -1959,7 +1959,7 @@ var app = (function () {
     			console.warn("<AppDemo> was created without expected prop 'help'");
     		}
 
-    		if (/*info*/ ctx[6] === undefined && !('info' in props)) {
+    		if (/*info*/ ctx[7] === undefined && !('info' in props)) {
     			console.warn("<AppDemo> was created without expected prop 'info'");
     		}
     	}

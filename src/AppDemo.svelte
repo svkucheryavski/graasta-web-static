@@ -25,7 +25,7 @@
 <div transition:fade class="backstage">
    <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
       <header class="modal-header">
-         <h2 title="click to close"><a href="/">{@html title}</a></h2>
+         <h2 title="click to close" on:click={() => dispatch("close")}>{@html title}</h2>
       </header>
       <section class="modal-content">
          <div class="content-container" class:hidden={tab != "app"}>
@@ -138,13 +138,8 @@
       color: #e0e0e0;
    }
 
-   .modal-header > h2 > a{
-      text-decoration: none;
-      user-select: none;
-      color: #e0e0e0;
-   }
 
-   .modal-header > h2 > a::after {
+   .modal-header > h2::after {
       content: '×';
       display: inline-block;
       margin-left: 10px;
@@ -156,7 +151,7 @@
       color: #e0e0e0;
    }
 
-   .modal-header > h2:hover a::after{
+   .modal-header > h2:hover::after{
       background: #ff9900;
       color: #301000;
    }
