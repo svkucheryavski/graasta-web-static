@@ -1,13 +1,8 @@
 <script>
-   import {createEventDispatcher} from "svelte";
-
    export let id;
    export let title;
    export let info;
-   export let help = undefined;
    export let video = undefined;
-
-   const dispatch = createEventDispatcher();
 </script>
 
 <div class="app-details">
