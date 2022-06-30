@@ -9,7 +9,7 @@
    export let title;
    export let video;
    export let help;
-   export let info;
+   // export let info = "";
    export let tab = "app";
 
    // possible tabs

@@ -1470,10 +1470,10 @@ var app = (function () {
     			attr_dev(iframe, "frameborder", "0");
     			attr_dev(iframe, "allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
     			iframe.allowFullscreen = true;
-    			add_location(iframe, file$1, 35, 12, 1055);
+    			add_location(iframe, file$1, 35, 12, 1063);
     			attr_dev(div, "class", "content-container svelte-1x2g6sw");
     			toggle_class(div, "hidden", /*tab*/ ctx[4] != "video");
-    			add_location(div, file$1, 34, 9, 980);
+    			add_location(div, file$1, 34, 9, 988);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1518,7 +1518,7 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/video");
     			attr_dev(a, "class", "svelte-1x2g6sw");
     			toggle_class(a, "selected", /*tab*/ ctx[4] === "video");
-    			add_location(a, file$1, 46, 12, 1638);
+    			add_location(a, file$1, 46, 12, 1646);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1563,7 +1563,7 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/info");
     			attr_dev(a, "class", "svelte-1x2g6sw");
     			toggle_class(a, "selected", /*tab*/ ctx[4] === "info");
-    			add_location(a, file$1, 49, 12, 1765);
+    			add_location(a, file$1, 49, 12, 1773);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1654,31 +1654,31 @@ var app = (function () {
     			if (if_block2) if_block2.c();
     			attr_dev(h2, "title", "click to close");
     			attr_dev(h2, "class", "svelte-1x2g6sw");
-    			add_location(h2, file$1, 27, 9, 700);
+    			add_location(h2, file$1, 27, 9, 708);
     			attr_dev(header, "class", "modal-header svelte-1x2g6sw");
-    			add_location(header, file$1, 26, 6, 661);
+    			add_location(header, file$1, 26, 6, 669);
     			attr_dev(div0, "class", "content-container svelte-1x2g6sw");
     			toggle_class(div0, "hidden", /*tab*/ ctx[4] != "app");
-    			add_location(div0, file$1, 30, 9, 844);
+    			add_location(div0, file$1, 30, 9, 852);
     			attr_dev(div1, "class", "content-container helptext svelte-1x2g6sw");
     			toggle_class(div1, "hidden", /*tab*/ ctx[4] != "info");
-    			add_location(div1, file$1, 38, 9, 1312);
+    			add_location(div1, file$1, 38, 9, 1320);
     			attr_dev(section, "class", "modal-content svelte-1x2g6sw");
-    			add_location(section, file$1, 29, 6, 803);
+    			add_location(section, file$1, 29, 6, 811);
     			attr_dev(a, "role", "tab");
     			attr_dev(a, "href", a_href_value = "#" + /*id*/ ctx[0] + "/app");
     			attr_dev(a, "class", "svelte-1x2g6sw");
     			toggle_class(a, "selected", /*tab*/ ctx[4] === "app");
-    			add_location(a, file$1, 44, 12, 1534);
+    			add_location(a, file$1, 44, 12, 1542);
     			attr_dev(nav, "class", "tablist svelte-1x2g6sw");
     			attr_dev(nav, "role", "tablist");
-    			add_location(nav, file$1, 43, 9, 1485);
+    			add_location(nav, file$1, 43, 9, 1493);
     			attr_dev(footer, "class", "modal-footer svelte-1x2g6sw");
-    			add_location(footer, file$1, 42, 6, 1446);
+    			add_location(footer, file$1, 42, 6, 1454);
     			attr_dev(article, "class", "modal svelte-1x2g6sw");
-    			add_location(article, file$1, 25, 3, 584);
+    			add_location(article, file$1, 25, 3, 592);
     			attr_dev(div2, "class", "backstage svelte-1x2g6sw");
-    			add_location(div2, file$1, 24, 0, 541);
+    			add_location(div2, file$1, 24, 0, 549);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1712,7 +1712,7 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(window, "keydown", /*handleKeydown*/ ctx[6], false, false, false),
-    					listen_dev(h2, "click", /*click_handler*/ ctx[8], false, false, false)
+    					listen_dev(h2, "click", /*click_handler*/ ctx[7], false, false, false)
     				];
 
     				mounted = true;
@@ -1835,7 +1835,6 @@ var app = (function () {
     	let { title } = $$props;
     	let { video } = $$props;
     	let { help } = $$props;
-    	let { info } = $$props;
     	let { tab = "app" } = $$props;
 
     	// possible tabs
@@ -1845,7 +1844,7 @@ var app = (function () {
     		if (event.key == "Escape") dispatch("close");
     	}
 
-    	const writable_props = ['id', 'title', 'video', 'help', 'info', 'tab'];
+    	const writable_props = ['id', 'title', 'video', 'help', 'tab'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<AppDemo> was created with unknown prop '${key}'`);
@@ -1858,7 +1857,6 @@ var app = (function () {
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('video' in $$props) $$invalidate(2, video = $$props.video);
     		if ('help' in $$props) $$invalidate(3, help = $$props.help);
-    		if ('info' in $$props) $$invalidate(7, info = $$props.info);
     		if ('tab' in $$props) $$invalidate(4, tab = $$props.tab);
     	};
 
@@ -1872,7 +1870,6 @@ var app = (function () {
     		title,
     		video,
     		help,
-    		info,
     		tab,
     		tabs,
     		handleKeydown
@@ -1883,7 +1880,6 @@ var app = (function () {
     		if ('title' in $$props) $$invalidate(1, title = $$props.title);
     		if ('video' in $$props) $$invalidate(2, video = $$props.video);
     		if ('help' in $$props) $$invalidate(3, help = $$props.help);
-    		if ('info' in $$props) $$invalidate(7, info = $$props.info);
     		if ('tab' in $$props) $$invalidate(4, tab = $$props.tab);
     	};
 
@@ -1891,7 +1887,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [id, title, video, help, tab, dispatch, handleKeydown, info, click_handler];
+    	return [id, title, video, help, tab, dispatch, handleKeydown, click_handler];
     }
 
     class AppDemo extends SvelteComponentDev {
@@ -1903,7 +1899,6 @@ var app = (function () {
     			title: 1,
     			video: 2,
     			help: 3,
-    			info: 7,
     			tab: 4
     		});
 
@@ -1931,10 +1926,6 @@ var app = (function () {
 
     		if (/*help*/ ctx[3] === undefined && !('help' in props)) {
     			console.warn("<AppDemo> was created without expected prop 'help'");
-    		}
-
-    		if (/*info*/ ctx[7] === undefined && !('info' in props)) {
-    			console.warn("<AppDemo> was created without expected prop 'info'");
     		}
     	}
 
@@ -1967,14 +1958,6 @@ var app = (function () {
     	}
 
     	set help(value) {
-    		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get info() {
-    		throw new Error("<AppDemo>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set info(value) {
     		throw new Error("<AppDemo>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
