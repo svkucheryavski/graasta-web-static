@@ -9,7 +9,7 @@
    <h2>{title}</h2>
    <ul>
       {#each apps as app}
-      <li><AppDetails {...app} on:showdemo /></li>
+      <li><AppDetails {...app} /></li>
       {:else}
       <p>No apps available in this block.</p>
       {/each}

@@ -1,6 +1,6 @@
 <script>
-   import { createEventDispatcher, onMount } from "svelte";
-   import { fade, scale, fly } from "svelte/transition";
+   import { createEventDispatcher } from "svelte";
+   import { fade, fly } from "svelte/transition";
 
    import AppFrame from "./AppFrame.svelte";
    const dispatch = createEventDispatcher();
@@ -9,14 +9,11 @@
    export let title;
    export let video;
    export let help;
+   export let info;
    export let tab = "app";
 
-   // let title = id;
-   let selected, sApp, sVideo, sHelp;
-
-   onMount(() => {
-      selected = tab === "video" ? sVideo : sApp;
-   });
+   // possible tabs
+   const tabs = ["app", "video", "info"];
 
    function handleKeydown(event) {
       if (event.key == "Escape") dispatch("close");
@@ -28,29 +25,29 @@
 <div transition:fade class="backstage">
    <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
       <header class="modal-header">
-         <h2 title="click to close" on:click|stopPropagation={() => dispatch("close")}>{@html title}</h2>
+         <h2 title="click to close"><a href="/">{@html title}</a></h2>
       </header>
       <section class="modal-content">
-         <div class="content-container" class:hidden={selected!=sApp} bind:this={sApp}>
+         <div class="content-container" class:hidden={tab != "app"}>
             <AppFrame {id} />
          </div>
          {#if video}
-         <div class="content-container" class:hidden={selected!=sVideo} bind:this={sVideo}>
+         <div class="content-container" class:hidden={tab != "video"} >
             <iframe width="100%" height="100%" src="{video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
          </div>
          {/if}
-         <div class="content-container helptext" class:hidden={selected!=sHelp} bind:this={sHelp}>
+         <div class="content-container helptext" class:hidden={tab != "info"}>
             {@html help}
          </div>
       </section>
       <footer class="modal-footer">
          <nav class="tablist" role="tablist">
-            <a href="#1" role="tab" class:selected={selected==sApp} on:click|stopPropagation={() => selected=sApp}>App</a>
+            <a role="tab" class:selected={tab==="app"} href="#{id}/app">App</a>
             {#if video}
-            <a href="#2" role="tab" class:selected={selected==sVideo} on:click|stopPropagation={() => selected=sVideo}>Video</a>
+            <a role="tab" class:selected={tab==="video"} href="#{id}/video">Video</a>
             {/if}
             {#if help}
-            <a href="#3" role="tab" class:selected={selected==sHelp} on:click|stopPropagation={() => selected=sHelp}>Info</a>
+            <a role="tab" class:selected={tab==="info"} href="#{id}/info">Info</a>
             {/if}
          </nav>
       </footer>
@@ -68,6 +65,7 @@
       background: transparent;
       color: #a0a0a0;
       height: 100%;
+      cursor: pointer;
       display: inline-block;
       font-size: 0.7em;
       padding: 0 0.25em;
@@ -132,13 +130,21 @@
 
    .modal-header > h2 {
       text-align: center;
+      user-select: none;
       font-size: 1.25em;
       font-weight: 500;
       padding: 0.5em;
+      cursor: default;
       color: #e0e0e0;
    }
 
-   .modal-header > h2::after {
+   .modal-header > h2 > a{
+      text-decoration: none;
+      user-select: none;
+      color: #e0e0e0;
+   }
+
+   .modal-header > h2 > a::after {
       content: '×';
       display: inline-block;
       margin-left: 10px;
@@ -150,7 +156,7 @@
       color: #e0e0e0;
    }
 
-   .modal-header > h2:hover::after{
+   .modal-header > h2:hover a::after{
       background: #ff9900;
       color: #301000;
    }

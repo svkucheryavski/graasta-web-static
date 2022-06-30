@@ -16,9 +16,9 @@
       <h3>{title}</h3>
       <p>{info}</p>
       <div class="toolbar">
-         <span class="toolbar__link toolbar__link_try" title="Run demo" on:click={() => dispatch("showdemo", {id, title, video, help, tab: "app"})}>Try</span>
+         <a class="toolbar__link toolbar__link_try" title="Run demo" href="#{id}/app">Try</a>
          {#if video}
-         <span class="toolbar__link toolbar__link_watch" title="Video" on:click={() => dispatch("showdemo", {id, title, video, help, tab: "video"})}>Watch</span>
+         <a class="toolbar__link toolbar__link_watch" title="Video" href="#{id}/video">Watch</a>
          {/if}
          <a class="toolbar__link toolbar__link_download" title="Download" href="/apps/{id}.zip">Download</a>
       </div>

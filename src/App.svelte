@@ -3,26 +3,85 @@
    import AppDemo from "./AppDemo.svelte";
    import appBlocks from "../public/apps/apps";
 
-   let demoOn = false;
-   let appInfo = undefined;
-   let searchStr = "";
+   let demoOn = false;        // status for demo window
+   let demoTab = "";          // current tab for demo window
+   let appInfo = undefined;   // current app for demo window
+   let searchStr = "";        // seach string with keyword
 
-   function showDemo(e) {
-      appInfo = e.detail;
+   // shows demo modal window with the app
+   function showDemo(id, tab) {
+      appInfo = getAppInfoById(id);
+
+      // no app found - clean the hash url and return
+      if (!appInfo) {
+         location.hash = "";
+         return;
+      }
+
+      // check that tab name is correct, if not - force tab to "app"
+      if (!["app", "video", "info"].includes(tab)) tab = "app";
+
+      // if tabe name is "video" but video is not available - force tab to "app"
+      if (tab == "video" && appInfo.video === "") tab = "app";
+
+      // show the modal with app demo
       demoOn = true;
+      demoTab = tab ? tab : "app";
       document.querySelector("body").style.overflow = "hidden";
    };
 
+   // closes demo modal window and cleans all related parameters
    function closeDemo(e) {
       document.querySelector("body").style.overflow = "auto";
-      demoOn = false
+      demoOn = false;
+      location.hash = "";
+      demoTab = "";
       appInfo = undefined;
    };
 
+   // cleans search results
    function resetSearch(e = undefined) {
       if (e === undefined || e.key === 'Escape') searchStr = "";
    }
 
+   // search the app by ID and returns its details
+   function getAppInfoById(id) {
+
+      const res = appBlocks
+         // in every app block search for app by its ID
+         .map(v => ({apps: v.apps.filter(a => "#" + a.id === id)}))
+         // remove empty blocks and extract app info
+         .filter(v => v.apps.length > 0);
+
+      if (res.length === 0 || res[0].apps.length === 0) return null;
+
+      return res[0].apps[0];
+   }
+
+   // detect changes in hash url and do routing
+   function routeChange() {
+
+      // no hash - close demo
+      if (location.hash === "") {
+         if (demoOn) closeDemo();
+         return;
+      }
+
+      // parse URL to get app ID and tab name if any
+      const hashElements = location.hash.split("/");
+      const appId = hashElements[0];
+      const demoTab = hashElements[1];
+
+      // no app found - close demo if any and return
+      if (appId === "") {
+         if (demoOn) closeDemo();
+         return;
+      }
+
+      showDemo(appId, demoTab)
+   }
+
+   // interactive search procedure
    $: appBlocksShow = searchStr.length > 1 ?
       appBlocks.map(v => ({
          title: v.title, apps: v.apps.filter(
@@ -36,18 +95,23 @@
    $: appListInfo =  searchStr.length > 0 ? `Found ${numApps} app${numApps > 1 ? "s" : ""}` : `${numApps} apps in the list.`;
 </script>
 
+<svelte:window on:load={routeChange} on:hashchange={routeChange} />
+
+<!-- demo modal window -->
 {#if demoOn && appInfo}
-<AppDemo {...appInfo} on:close={closeDemo} />
+<AppDemo {...appInfo} tab={demoTab} on:close={() => (location.hash = "")}  />
 {/if}
 
+<!-- search block -->
 <div class="search-block">
    <input on:keydown={resetSearch} placeholder="Enter a single keyword (e.g. interval)" bind:value={searchStr} />
    <button class:hidden={searchStr.length < 1} on:click={() => resetSearch(undefined)}>&times;</button>
    <span>{appListInfo}</span>
 </div>
 
+<!-- list with application blocks -->
 {#each appBlocksShow.filter(v => v.apps.length > 0) as appBlock}
-<AppBlock {...appBlock} on:showdemo={showDemo} />
+<AppBlock {...appBlock} />
 {/each}
 
 <style>
