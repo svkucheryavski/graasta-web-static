@@ -6,9 +6,11 @@
    const dispatch = createEventDispatcher();
 
    export let id;
+   export let info = "";
    export let title;
    export let video;
    export let help;
+
    // export let info = "";
    export let tab = "app";
 

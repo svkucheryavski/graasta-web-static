@@ -2,6 +2,7 @@
    export let id;
    export let title;
    export let info;
+   export let help;
    export let video = undefined;
 </script>
 
