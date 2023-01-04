@@ -110,7 +110,7 @@
       width: 100%;
 
       position: relative;
-      height: min(700px, 100%);
+      height: min(750px, 100%);
       overflow: auto;
 
       display: flex;
@@ -180,6 +180,7 @@
       margin: 0 auto;
       padding: 0;
       background: #fefefe;
+      overflow: hidden;
    }
 
    /* help text  */
