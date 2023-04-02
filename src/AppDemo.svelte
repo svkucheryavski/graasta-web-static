@@ -25,7 +25,7 @@
 <svelte:window on:keydown={handleKeydown}/>
 
 <div transition:fade class="backstage">
-   <article transition:fly="{{ x: -500, duration: 600 }}"  class="modal">
+   <article transition:fly={{ x: -500, duration: 600 }}  class="modal">
       <header class="modal-header">
          <h2 title="click to close" on:click={() => dispatch("close")}>{@html title}</h2>
       </header>
@@ -38,8 +38,10 @@
             <iframe width="100%" height="100%" src="{video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
          </div>
          {/if}
-         <div class="content-container helptext" class:hidden={tab != "info"}>
+         <div class="content-container" class:hidden={tab != "info"}>
+            <div class="helptext">
             {@html help}
+            </div>
          </div>
       </section>
       <footer class="modal-footer">
@@ -96,6 +98,7 @@
       bottom: 0;
       /* background: rgba(0.2, 0, 0, 0.85); */
       background: #303030;
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -105,14 +108,17 @@
       margin: 0 auto;
       padding-bottom: 0.25em;
       flex-basis: max-content;
-      flex-shrink: 0;
+      flex-shrink: 1;
       flex-grow: 1;
-      width: 100%;
+
 
       position: relative;
-      height: min(750px, 100%);
+      width: 100%;
+      height: 100%;
+      max-height: 900px;
+      min-width: 900px;
+      min-height: 600px;
       overflow: auto;
-
       display: flex;
       flex-direction: column;
    }
@@ -124,7 +130,7 @@
 
    .modal-footer {
       text-align: center;
-      height: 1.75em;
+      height: 40px;
       font-size: 1.25em;
       padding: 0;
    }
@@ -161,6 +167,7 @@
    .modal-content  {
       margin: 0 auto;
       padding: 5px;
+      box-sizing: border-box;
       background: #fefefe;
       height: max-content;
       overflow: auto;
@@ -172,13 +179,11 @@
 
       min-width: 800px;
       min-height: 450px;
-
-      width: auto;
+      max-width: 1400px;
+      width: 100%;
       height: 100%;
-
-      aspect-ratio: 16/9;
       margin: 0 auto;
-      padding: 0;
+      padding: 0 10px;
       background: #fefefe;
       overflow: hidden;
    }
@@ -186,21 +191,20 @@
    /* help text  */
 
    .helptext {
-      padding: 1em;
-      line-height: 1.35em;
-      font-size: 1em;
+      width: 100%;
+      height: 100%;
       color: #303030;
    }
 
    .helptext :global(h2) {
-      padding: 1.25em 0 1em 0;
+      padding: 1.0em 0 0.5em 0;
       font-size: 1.2em;
    }
 
    .helptext :global(p) {
       padding: 0 0 0.5em 0;
       line-height: 1.5em;
-      font-size: 1em;
+      font-size: 1rem;
    }
 </style>
 
